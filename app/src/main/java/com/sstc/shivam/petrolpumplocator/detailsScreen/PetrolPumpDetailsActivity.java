@@ -21,19 +21,16 @@ import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.GPSTracker;
 import com.sstc.shivam.petrolpumplocator.R;
-import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpDetails;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.drawing.OsmPath;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -69,12 +66,21 @@ public class PetrolPumpDetailsActivity extends Activity {
             emailIdView,descriptionView,pricePetrolView,priceDiselView,visitsView,stateView,lastUpdatedView;
 
     RatingBar ratingbar;
+    MapView map;
+    SimpleLocationOverlay mMyLocationOverlay;
+    ScaleBarOverlay mScaleBarOverlay;
+    ItemizedIconOverlay<OverlayItem> currentLocationOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_scrolling);
+
+
+        map = (MapView) findViewById(R.id.map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
 
         item=(PetrolPumpItem) getIntent().getSerializableExtra(PetrolPumpItem.EXTRASTRING);
         if(item==null)
@@ -117,8 +123,6 @@ public class PetrolPumpDetailsActivity extends Activity {
 
         destinationPoint=new GeoPoint(Double.parseDouble(item.latitude),Double.parseDouble(item.longitude));
 
-        map= (MapView) findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
 
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
@@ -203,9 +207,6 @@ public class PetrolPumpDetailsActivity extends Activity {
 
     }
 
-    MapView map;
-
-
     void initializeViews()
     {
         pnameView=(TextView) findViewById(R.id.pname_view);
@@ -237,11 +238,6 @@ public class PetrolPumpDetailsActivity extends Activity {
         ratingbar.setRating(Integer.parseInt(item.rating));
 
     }
-
-    SimpleLocationOverlay mMyLocationOverlay;
-    ScaleBarOverlay mScaleBarOverlay;
-    ItemizedIconOverlay<OverlayItem> currentLocationOverlay;
-
 
     @Override
     protected void onResume() {
@@ -308,7 +304,7 @@ public class PetrolPumpDetailsActivity extends Activity {
 
             linearLayout.removeView(air);
         }
-        if(item.atm==null)
+        if (item.atm == null || (item.atm.compareTo("0") == 0))
         {
             atm.setEnabled(false);
 
@@ -367,6 +363,8 @@ public class PetrolPumpDetailsActivity extends Activity {
     class AddPolygonAsynTask extends AsyncTask<Object,Integer,Polyline>
     {
 
+        Marker nodeMarker;
+
         @Override
         protected Polyline doInBackground(Object... params) {
 
@@ -386,8 +384,6 @@ public class PetrolPumpDetailsActivity extends Activity {
 
             return roadOverlay;
         }
-
-        Marker nodeMarker;
 
         @Override
         protected void onPreExecute() {

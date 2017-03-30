@@ -16,9 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.detailsScreen.PetrolPumpDetailsActivity;
@@ -38,16 +36,13 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
     ListLocationFragFragment listLocationFragFragment;
     BottomNavigationView navigation;
     Fragment selectedFragment=null;
-    private String[] mPlanetTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
     StartScreenFrag startScreenFrag;
     Boolean isStartScreen=true;
     Fragment tempStartFrag;
     GPSTracker gps;
-
-
-
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -241,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
             selectedFragment = tempStartFrag;
             replaceFrame(tempStartFrag);
         }
-    };
+    }
 
     public void onMapButtonPressed(){
 
@@ -262,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
 
         requestForPermission();
         onSearchRequested();
-    };
+    }
 
     @Override
     public boolean onSearchRequested() {
@@ -299,15 +294,8 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
         int permissionCheckCourse = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if((permissionCheckFine==android.content.pm.PackageManager.PERMISSION_GRANTED )&&
-                (permissionCheckCourse==android.content.pm.PackageManager.PERMISSION_GRANTED))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return (permissionCheckFine == android.content.pm.PackageManager.PERMISSION_GRANTED) &&
+                (permissionCheckCourse == android.content.pm.PackageManager.PERMISSION_GRANTED);
 
     }
 
@@ -329,8 +317,10 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         5);
 
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        5);
 
-                Toast.makeText(this,"check fir permissons asked",Toast.LENGTH_SHORT).show();
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -338,7 +328,6 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
             }
         }
 
-        Toast.makeText(this,"check fir permissons called",Toast.LENGTH_SHORT).show();
         return checkForPermission();
     }
 

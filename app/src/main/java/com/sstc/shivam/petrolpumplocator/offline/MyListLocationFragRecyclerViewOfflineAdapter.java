@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.R;
-import com.sstc.shivam.petrolpumplocator.offline.database.GetDataFromSQLite;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment.OnListFragmentInteractionListener;
 
@@ -46,7 +44,7 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mItem = mValues.get(position);
+        final PetrolPumpItem petrolPumpItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).pname);
         holder.mDistanceView.setText(mValues.get(position).distance);
         holder.mTimeView.setText(mValues.get(position).duration);
@@ -59,24 +57,32 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
 
-                    Log.i("holder nfo", holder.mItem.pname);
-                    mListener.onListFragmentOfflineInteraction(holder.mItem);
+                    Log.i("holder nfo", petrolPumpItem.pname);
+                    mListener.onListFragmentOfflineInteraction(petrolPumpItem);
                 } else {
                     //  Toast.makeText(null,"listner clickd",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+//        if(petrolPumpItem!=null)
         setAllButtons(holder, position, mValues.get(position));
 
     }
 
-    void setAllButtons(final ViewHolder holder, final  int position,final PetrolPumpItem item)
+    @Override
+    public void onViewAttachedToWindow(ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+        Log.i("ATTACHED_VISIBILITY", holder.atm.toString() + "\t" + holder.atm.getVisibility());
+    }
+
+    void setAllButtons(ViewHolder holder, int position, final PetrolPumpItem item)
     {
         if(item.rest_room==null)
         {
             holder.restroom.setEnabled(false);
-            holder.linearLayout.removeView( holder.restroom);
+            holder.linearLayout.removeView(holder.restroom);
         }
         if(item.water==null)
         {
@@ -91,14 +97,13 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
         }
         if(true)
         {
-            holder.shop.setEnabled(false);
+            //  holder.shop.setEnabled(false);
 
-            holder.linearLayout.removeView( holder.shop);
+            // holder.linearLayout.removeView( holder.shop);
         }
         if(item.card_accepted==null)
         {
-            holder.card_pay.setEnabled(false);
-
+            //  holder.card_pay.setEnabled(false);
             holder.linearLayout.removeView( holder.card_pay);
         }
 
@@ -108,7 +113,8 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
 
             holder.linearLayout.removeView( holder.air);
         }
-        if(item.atm==null)
+
+        if (item.atm == null || (item.atm.compareTo("0") == 0))
         {
             holder.atm.setEnabled(false);
 
@@ -147,7 +153,6 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
         public final TextView mTimeView;
         public final TextView mDistanceView;
         public final TextView mAddressView;
-        public PetrolPumpItem mItem;
 
         LinearLayout linearLayout;
         
@@ -167,6 +172,7 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
             getAllFacButton(view);
 
         }
+
         void getAllFacButton(View view)
         {
             restroom=(ImageView)view.findViewById(R.id.rest_room);

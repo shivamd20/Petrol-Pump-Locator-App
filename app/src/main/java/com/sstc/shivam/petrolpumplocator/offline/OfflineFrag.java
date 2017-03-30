@@ -3,21 +3,16 @@ package com.sstc.shivam.petrolpumplocator.offline;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.Switch;
-import android.widget.Toast;
 
-import com.sstc.shivam.petrolpumplocator.MainActivity;
 import com.sstc.shivam.petrolpumplocator.R;
 import com.sstc.shivam.petrolpumplocator.offline.database.GetAllStateNamesFromServer;
 import com.sstc.shivam.petrolpumplocator.offline.database.GetDataFromSQLite;
@@ -113,7 +108,6 @@ public class OfflineFrag extends Fragment implements DeleteOfflineMapDilogue.Fir
                         .getAllStateList(),OfflineFrag.this);
 
                 deleteOfflineMapDilogue.show(OfflineFrag.this.getChildFragmentManager(),"Delete Selected Masp");
-
             }
         });
 
@@ -201,6 +195,29 @@ public class OfflineFrag extends Fragment implements DeleteOfflineMapDilogue.Fir
         new GetDataFromSQLite(this.getActivity()).deleteStateFromSQlite(args);
     }
 
+    public void onDownloadOffllineMapsokAction(ArrayList<String> args){
+        for(String X:args)
+        {
+            OfflineLocationDownloadTask offlineLocationDownloadTask
+                    =OfflineLocationDownloadTask.getInstance  ( this,   X );
+            offlineLocationDownloadTask.execute();
+
+        }
+    }
+
+   public void showAlert(String msg)
+    {
+        new AlertDialog.Builder(this.getActivity())
+                .setTitle("Messege")
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {  }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -213,29 +230,7 @@ public class OfflineFrag extends Fragment implements DeleteOfflineMapDilogue.Fir
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-      //  void onFragmentInteraction(Uri uri);
-    }
-
-
-    public void onDownloadOffllineMapsokAction(ArrayList<String> args){
-        for(String X:args)
-        {
-            OfflineLocationDownloadTask offlineLocationDownloadTask
-                    =OfflineLocationDownloadTask.getInstance  ( this,   X );
-            offlineLocationDownloadTask.execute();
-
-        }
-    }
-   public void showAlert(String msg)
-    {
-        new AlertDialog.Builder(this.getActivity())
-                .setTitle("Messege")
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {  }
-                })
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
+        //  void onFragmentInteraction(Uri uri);
     }
 
 }

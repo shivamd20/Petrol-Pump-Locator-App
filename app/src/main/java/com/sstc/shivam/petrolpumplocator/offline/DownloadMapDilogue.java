@@ -6,11 +6,10 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.sstc.shivam.petrolpumplocator.offline.database.GetDataFromSQLite;
+
 import java.util.ArrayList;
 
-/**
- * Created by shiva on 25-03-2017.
- */
 
 public class DownloadMapDilogue extends DialogFragment {
     ArrayList mSelectedItems = new ArrayList();
@@ -29,12 +28,17 @@ public class DownloadMapDilogue extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        ArrayList<String> tempdb = new GetDataFromSQLite(getActivity())
+                .getAllStateList();
+        boolean[] checkedItems = new boolean[listStates.size()];
+
+        new GetDataFromSQLite(getActivity()).deleteOfflineMap();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("select states to download maps")
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(arryListtoArray(listStates), null,
+                .setMultiChoiceItems(arryListtoArray(listStates), checkedItems,
                         new DialogInterface.OnMultiChoiceClickListener() {
 
                             @Override
@@ -56,6 +60,9 @@ public class DownloadMapDilogue extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
 
                         ArrayList<String>  list=new ArrayList<String>();
+
+                        GetDataFromSQLite dataFromSQLite = new GetDataFromSQLite(DownloadMapDilogue.this.getActivity());
+                        dataFromSQLite.deleteOfflineMap();
 
                         for(Object X:mSelectedItems)
                         {
@@ -93,5 +100,5 @@ public class DownloadMapDilogue extends DialogFragment {
 
     public interface onDownloadOffllineMapsLisner{
 
-        public void onDownloadOffllineMapsokAction(ArrayList<String> args);
+        void onDownloadOffllineMapsokAction(ArrayList<String> args);
     }}

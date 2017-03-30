@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sstc.shivam.petrolpumplocator.R;
-import com.sstc.shivam.petrolpumplocator.offline.MyListLocationFragRecyclerViewOfflineAdapter;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment.OnListFragmentInteractionListener;
 
@@ -107,7 +106,8 @@ public class MyListLocationFragRecyclerViewAdapter extends RecyclerView.Adapter<
 
             holder.linearLayout.removeView( holder.air);
         }
-        if(item.atm==null)
+
+        if (item.atm == null || (item.atm.compareTo("0") == 0))
         {
             holder.atm.setEnabled(false);
 

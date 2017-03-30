@@ -29,7 +29,6 @@ public class DeleteOfflineMapDilogue extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("select states")
                 // Specify the list array, the items to be selected by default (null for none),
@@ -92,5 +91,5 @@ public class DeleteOfflineMapDilogue extends DialogFragment {
 
     public interface FireMissilesDialogFragmentLisner{
 
-        public void onFireMissilesDialogFragmentOkAction(ArrayList<String> args);
+        void onFireMissilesDialogFragmentOkAction(ArrayList<String> args);
     }}

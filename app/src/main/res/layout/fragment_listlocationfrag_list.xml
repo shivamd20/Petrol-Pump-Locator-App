@@ -3,9 +3,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame_layout_frag"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/frame_layout_frag">
+    android:layout_height="wrap_content">
 
 
     <ImageView
@@ -15,7 +15,7 @@
         android:backgroundTint="@android:color/holo_green_dark"
         android:cropToPadding="false"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/petrol_pump_pic" />
+        app:srcCompat="@mipmap/fgdf" />
 
     <LinearLayout
         android:id="@+id/linearLayoutMAINFRAG"
