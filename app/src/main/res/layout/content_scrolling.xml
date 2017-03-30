@@ -80,7 +80,7 @@
                         android:src="@drawable/diesel" />
 
                     <ImageView
-                        android:id="@+id/ATM"
+                        android:id="@+id/atm"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_gravity="left|start"
@@ -197,7 +197,7 @@
                                 android:src="@drawable/petrolprice" />
 
                             <TextView
-                                android:id="@+id/petrol_price_text"
+                                android:id="@+id/price_petrol"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -224,7 +224,7 @@
                                 android:src="@drawable/dieselprice" />
 
                             <TextView
-                                android:id="@+id/diesel_price_text"
+                                android:id="@+id/price_diesel"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -286,7 +286,7 @@
                     android:padding="2dp">
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/opening_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -295,7 +295,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/closing_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -326,6 +326,7 @@
 
                 <TextView
 
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -367,13 +368,15 @@ dfjgdfgjdfgdf jgdf
                             android:id="@+id/textView10"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:padding="5dp"
                             android:text="email"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <TextView
-                            android:id="@+id/textView8"
+                            android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:padding="5dp"
                             android:text="TextView"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textStyle="bold|italic" />
@@ -387,13 +390,15 @@ dfjgdfgjdfgdf jgdf
                             android:id="@+id/textView9"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:padding="5dp"
                             android:text="website"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <TextView
-                            android:id="@+id/textView11"
+                            android:id="@+id/website"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:padding="5dp"
                             android:text="fdgdfgf hgfh gfgd fgfdg d fgdgdfgd "
                             android:textStyle="bold|italic" />
                     </TableRow>
@@ -433,7 +438,7 @@ dfjgdfgjdfgdf jgdf
                             android:text="Varified" />
 
                         <ImageView
-                            android:id="@+id/imageView2"
+                            android:id="@+id/varified"
                             android:layout_width="match_parent"
                             android:layout_height="25dp"
                             android:layout_weight="1"
@@ -449,7 +454,7 @@ dfjgdfgjdfgdf jgdf
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView13"
+                            android:id="@+id/visits"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="VISITS: 30" />
@@ -470,7 +475,7 @@ dfjgdfgjdfgdf jgdf
         </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/last_updated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="last updated" />

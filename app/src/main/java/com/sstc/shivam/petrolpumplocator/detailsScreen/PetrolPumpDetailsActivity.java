@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +52,6 @@ public class PetrolPumpDetailsActivity extends Activity {
 
     protected GeoPoint startPoint, destinationPoint;
 
-    public final static String SOURCE_LATTTUDE = "slat";
-    final public static String DEST_LATTITUDE = "dlat";
-
-    final public static String SOURCE_LONGITUDE = "slat";
-    final public static String DEST_LONGITUDE = "dlat";
 
 
     PetrolPumpDetailsActivity pPDA = this;
@@ -68,6 +64,11 @@ public class PetrolPumpDetailsActivity extends Activity {
     GPSTracker gps;
 
     ImageView restroom,water,toilet,shop,card_pay,air,atm,first_aid,petrol,disel;
+
+    TextView pnameView,contactNoView,addressView,openingTimeView,closingTimeView,websiteView,
+            emailIdView,descriptionView,pricePetrolView,priceDiselView,visitsView,stateView,lastUpdatedView;
+
+    RatingBar ratingbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,11 +199,44 @@ public class PetrolPumpDetailsActivity extends Activity {
 
         map.invalidate();
 
+        initializeViews();
+
     }
 
     MapView map;
 
 
+    void initializeViews()
+    {
+        pnameView=(TextView) findViewById(R.id.pname_view);
+        addressView=(TextView) findViewById(R.id.address);
+        pricePetrolView=(TextView) findViewById(R.id.price_petrol);
+        priceDiselView=(TextView) findViewById(R.id.price_diesel);
+        openingTimeView=(TextView) findViewById(R.id.opening_time);
+        closingTimeView=(TextView) findViewById(R.id.closing_time);
+        descriptionView=(TextView) findViewById(R.id.description);
+        emailIdView=(TextView) findViewById(R.id.email);
+        websiteView=(TextView) findViewById(R.id.website);
+        visitsView=(TextView) findViewById(R.id.visits);
+        lastUpdatedView=(TextView) findViewById(R.id.last_updated);
+        ratingbar=(RatingBar)findViewById(R.id.ratingBar) ;
+
+        pnameView.setText(item.pname);
+        addressView.setText(item.address);
+        pricePetrolView.setText(item.price_petrol);
+        priceDiselView.setText(item.price_diesel);
+        openingTimeView.setText(item.opening_time);
+        closingTimeView.setText(item.closing_time);
+        descriptionView.setText(item.description);
+        emailIdView.setText(item.email_id);
+        websiteView.setText(item.website);
+        lastUpdatedView.setText(item.last_updated);
+        visitsView.setText("visits:  "+item.visits);
+
+        if(item.rating!=null)
+        ratingbar.setRating(Integer.parseInt(item.rating));
+
+    }
 
     SimpleLocationOverlay mMyLocationOverlay;
     ScaleBarOverlay mScaleBarOverlay;
@@ -284,25 +318,20 @@ public class PetrolPumpDetailsActivity extends Activity {
         {
             first_aid.setEnabled(false);
 
-            linearLayout.removeView(restroom);
+            linearLayout.removeView(first_aid);
         }
         if(item.petrol==null)
         {
             petrol.setEnabled(false);
 
-            linearLayout.removeView(restroom);
+            linearLayout.removeView(petrol);
         }
         if(item.disel==null)
         {
             disel.setEnabled(false);
 
-            linearLayout.removeView(restroom);
+            linearLayout.removeView(disel);
         }
-
-        Toast.makeText(this,""+item.disel,Toast.LENGTH_SHORT).show();
-
-
-
     }
 
 
