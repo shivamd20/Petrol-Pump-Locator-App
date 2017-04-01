@@ -37,6 +37,7 @@ public class ListLocationFragFragmentOffline extends Fragment {
 
     // TODO: Customize parameter argument names
 
+
     private static final String ARG_COLUMN_COUNT = "column-count";
     public static MyListLocationFragRecyclerViewOfflineAdapter listLocationFragRecyclerOfflineViewAdapter;
   GPSTracker gps;
@@ -101,7 +102,7 @@ public class ListLocationFragFragmentOffline extends Fragment {
 
 
         listLocationFragRecyclerOfflineViewAdapter =
-                new MyListLocationFragRecyclerViewOfflineAdapter(GetDataFromSQLite.ITEMS, mListener); //TODO
+                new MyListLocationFragRecyclerViewOfflineAdapter(GetDataFromSQLite.ITEMS, mListener,recyclerView); //TODO
 
         recyclerView.setAdapter(listLocationFragRecyclerOfflineViewAdapter);
 
@@ -148,12 +149,10 @@ public class ListLocationFragFragmentOffline extends Fragment {
 
     void showList(Location location) {
 
-        GetDataFromSQLite dataFromSQLite = new GetDataFromSQLite(this.getActivity());
-        Cursor cur = dataFromSQLite.getLocations(location,0,200);
 
         GetAllLocationAsyncTask getAllLocationAsyncTask = new GetAllLocationAsyncTask(this.getActivity());
 
-        getAllLocationAsyncTask.execute(location, 0, 200);
+        getAllLocationAsyncTask.execute(location, 0, 15);
 
         try {
             getAllLocationAsyncTask.get();

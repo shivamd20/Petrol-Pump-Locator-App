@@ -86,11 +86,9 @@ public class GetAllLocation extends AsyncTask<Object, Integer, JSONObject> {
                     je.printStackTrace();
                 }
 
-
-                 String origin="21,81";
                  String dest="";
 
-                origin=latLng.getLatitude()+","+latLng.getLongitude();
+              String  origin=latLng.getLatitude()+","+latLng.getLongitude();
 
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -108,15 +106,20 @@ public class GetAllLocation extends AsyncTask<Object, Integer, JSONObject> {
                 reader.setLenient(true);
                 Response r = (new Gson().fromJson(reader, Response.class));
 
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
-                       PetrolPumpItem pumpItem = new Gson().fromJson(jsonArray.getJSONObject(i).toString(),
-                                PetrolPumpItem.class);
-                        pumpItem.duration=r.rows[0].elements[i].duration.text;
-                        pumpItem.distance=r.rows[0].elements[i].distance.text;
-                        pumpItem.address=r.destination_addresses[i];
 
+                        PetrolPumpItem pumpItem = new Gson().fromJson(jsonArray.getJSONObject(i).toString(),
+                                PetrolPumpItem.class);
+                        try {
+                            pumpItem.duration = r.rows[0].elements[i].duration.text;
+                            pumpItem.distance = r.rows[0].elements[i].distance.text;
+                            pumpItem.address = r.destination_addresses[i];
+                        }
+                        catch (NullPointerException ne)
+                        {
+                            ne.printStackTrace();
+                        }
                         ITEMS.add(i, pumpItem);
                     } catch (JSONException je) {
                         je.printStackTrace();

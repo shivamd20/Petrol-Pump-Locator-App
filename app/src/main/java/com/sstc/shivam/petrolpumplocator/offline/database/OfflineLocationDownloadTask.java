@@ -1,9 +1,9 @@
 package com.sstc.shivam.petrolpumplocator.offline.database;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -152,13 +152,20 @@ public class OfflineLocationDownloadTask extends AsyncTask<Object, String, Petro
        // super.onPostExecute(s);
 
 
-        Log.e("result", s.world.length + "");
+        if( s!=null)
+        {
+            for (int i = 0; i < s.world.length; i++) {
+                Log.e("result", s.world[i].latitude + "");
+            }
 
-        for (int i = 0; i < s.world.length; i++) {
-            Log.e("result", s.world[i].latitude + "");
+            new GetDataFromSQLite(context.getActivity()).deleteOfflineMap();
+
+            putIntoDataBase(s.world);
         }
-
-        putIntoDataBase(s.world);
+        else
+        {
+          new AlertDialog.Builder(context.getActivity()).setMessage("There might be some problem in your network connectivity").setTitle("ERROR OCCURRED").show();
+        }
 
         progressDialog.dismiss();
     }

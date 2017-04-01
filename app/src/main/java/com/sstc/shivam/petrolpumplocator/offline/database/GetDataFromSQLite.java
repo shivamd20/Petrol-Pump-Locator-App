@@ -16,6 +16,7 @@ import java.util.List;
  * Created by shiva on 23-03-2017.
  */
 
+
 public class GetDataFromSQLite {
 
     public static final List<PetrolPumpItem> ITEMS = new ArrayList<PetrolPumpItem>();
@@ -25,6 +26,54 @@ public class GetDataFromSQLite {
 
     public GetDataFromSQLite(Context context) {
         this.mContext = context;
+    }
+
+
+    public Cursor getLocationsWithFilter(Location l,int star,int en,String where,String wherevalues[] ) {
+
+// Filter results WHERE "title" = My Title
+
+        DBHelper mDbHelper = new DBHelper(mContext);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String start = star+"", end = en+"";
+
+        double lat = l.getLatitude();
+        double longe = l.getLongitude();
+
+        String query = "SELECT *, ( (" + lat + " - " + Contract.PetrolPumpDetail.LATITUDE + ")" +
+                "*(" + lat + " - " + Contract.PetrolPumpDetail.LATITUDE + ") + " +
+                "(" + longe + " - " + Contract.PetrolPumpDetail.LONGITUDE + ")*" +
+                "(" + longe + " - " + Contract.PetrolPumpDetail.LONGITUDE + ") ) " +
+                "as dist FROM " + Contract.PetrolPumpDetail.TABLE_NAME + " WHERE "+
+                Contract.PetrolPumpDetail.LONGITUDE +" IS NOT NULL "+" ORDER BY dist LIMIT " + start + "," + end + ";";
+
+        Cursor cursor =
+
+        db.query(Contract.PetrolPumpDetail.TABLE_NAME,
+               new String[] {"*","( (" + lat + " - " + Contract.PetrolPumpDetail.LATITUDE + ")" +
+                       "*(" + lat + " - " + Contract.PetrolPumpDetail.LATITUDE + ") + " +
+                       "(" + longe + " - " + Contract.PetrolPumpDetail.LONGITUDE + ")*" +
+                       "(" + longe + " - " + Contract.PetrolPumpDetail.LONGITUDE + ") ) " +
+                       "as dist "},
+               where,
+                wherevalues,
+                null,
+                null,
+                "dist",start+","+end);
+
+
+
+        /*query(boolean distinct,
+                                     String table,
+                                     String[] columns,
+                                     String selection,
+                                     String[] selectionArgs,
+                                     String groupBy,
+                                     String having,
+                                     String orderBy,
+                                     String limit)*/
+        return cursor;
     }
 
     public Cursor getLocations(Location l,int star,int en) {
@@ -113,7 +162,7 @@ public class GetDataFromSQLite {
         return true;
     }
 
-   public Cursor searchInSqlliteDatabase(String searchString)
+  synchronized public Cursor searchInSqlliteDatabase(String searchString)
     {
 //        String sql = "SELECT *,"+Contract.PetrolPumpDetail.PID+" AS _id"
 //                +" FROM "+Contract.PetrolPumpDetail.TABLE_NAME+" WHERE "+Contract.PetrolPumpDetail.PID+" IN " +

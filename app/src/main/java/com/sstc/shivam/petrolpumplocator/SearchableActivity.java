@@ -19,6 +19,7 @@ public class SearchableActivity extends ListActivity {
 Cursor mCursor;
         @Override
         public void onCreate(Bundle savedInstanceState) {
+            finish();
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_searchable);
 
@@ -54,7 +55,6 @@ Cursor mCursor;
             // Bind to our new adapter.
             setListAdapter(adapter);
         }
-
 
     private void doSearch(String query){
         Bundle data = new Bundle();

@@ -65,7 +65,7 @@ public class MyListLocationFragRecyclerViewAdapter extends RecyclerView.Adapter<
             }
         });
 
-        setAllButtons(holder, position, mValues.get(position));
+       // setAllButtons(holder, position, mValues.get(position));
 
     }
 
@@ -168,6 +168,7 @@ public class MyListLocationFragRecyclerViewAdapter extends RecyclerView.Adapter<
         }
         void getAllFacButton(View view)
         {
+            /*
             restroom=(ImageView)view.findViewById(R.id.rest_room);
             water=(ImageView)view.findViewById(R.id.water);
             toilet=(ImageView)view.findViewById(R.id.toilet);
@@ -179,6 +180,7 @@ public class MyListLocationFragRecyclerViewAdapter extends RecyclerView.Adapter<
             petrol=(ImageView)view.findViewById(R.id.petrol);
             disel=(ImageView)view.findViewById(R.id.diesel);
             linearLayout=(LinearLayout) view.findViewById(R.id.linearLayoutFront);
+            */
         }
 
         @Override

@@ -1,15 +1,22 @@
 package com.sstc.shivam.petrolpumplocator.offline;
 
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.location.Location;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.R;
+import com.sstc.shivam.petrolpumplocator.offline.database.GetAllLocationAsyncTask;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment.OnListFragmentInteractionListener;
 
@@ -20,37 +27,100 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.Adapter<MyListLocationFragRecyclerViewOfflineAdapter.ViewHolder> {
+public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.Adapter{
 
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
     private final List<PetrolPumpItem> mValues;
     private final ListLocationFragFragmentOffline.OnListFragmentOfflineInteractionListener mListener;
+    Location location;
 
-    public MyListLocationFragRecyclerViewOfflineAdapter(List<PetrolPumpItem> items, ListLocationFragFragmentOffline.OnListFragmentOfflineInteractionListener listener) {
+
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading;
+
+    @Override
+    public int getItemViewType(int position) {
+        return mValues.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+    }
+
+    public  void setLocation(Location mlocation){
+        location=mlocation;
+    }
+
+    public MyListLocationFragRecyclerViewOfflineAdapter(List<PetrolPumpItem> items, final ListLocationFragFragmentOffline.OnListFragmentOfflineInteractionListener listener,
+                                                        RecyclerView recyclerView) {
         mValues = items;
         mListener = listener;
+
+        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+
+            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
+                    .getLayoutManager();
+
+
+            recyclerView
+                    .addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView,
+                                               int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            totalItemCount = linearLayoutManager.getItemCount();
+                            lastVisibleItem = linearLayoutManager
+                                    .findLastVisibleItemPosition();
+                            if (!loading
+                                    && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                                // End has been reached
+                                // Do something
+                                    listener.onLoadMore(location,mValues.size(),5);
+
+                                loading = true;
+                            }
+                        }
+                    });
+        }
+
     }
 
-    public void removeitem(int i) {
-        mValues.remove(i);
-    }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_listlocationfrag, parent, false);
-        return new ViewHolder(view);
+        RecyclerView.ViewHolder vh;
+        if (viewType == VIEW_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.fragment_listlocationfrag, parent, false);
+
+            vh = new ViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            vh = new ProgressViewHolder(v);
+        }
+        return vh;
     }
 
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final PetrolPumpItem petrolPumpItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).pname);
-        holder.mDistanceView.setText(mValues.get(position).distance);
-        holder.mTimeView.setText(mValues.get(position).duration);
-        holder.mAddressView.setText(mValues.get(position).address);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if ((holder instanceof ViewHolder)) {
+
+           ViewHolder listViewHolder =(ViewHolder) holder;
+
+        final PetrolPumpItem petrolPumpItem = mValues.get(position);
+        listViewHolder.mContentView.setText(mValues.get(position).pname);
+        listViewHolder.mDistanceView.setText(mValues.get(position).distance);
+        listViewHolder.mTimeView.setText(mValues.get(position).duration);
+        listViewHolder.mAddressView.setText(mValues.get(position).address);
+
+        listViewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
@@ -64,79 +134,77 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
                 }
             }
         });
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+        }
 
 //        if(petrolPumpItem!=null)
-        setAllButtons(holder, position, mValues.get(position));
+       /// setAllButtons(holder, position, petrolPumpItem);
 
+    }
+
+    public void setLoaded() {
+        loading = false;
     }
 
     @Override
-    public void onViewAttachedToWindow(ViewHolder holder) {
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder){
         super.onViewAttachedToWindow(holder);
 
-        Log.i("ATTACHED_VISIBILITY", holder.atm.toString() + "\t" + holder.atm.getVisibility());
     }
 
-    void setAllButtons(ViewHolder holder, int position, final PetrolPumpItem item)
+    void setAllButtons( ViewHolder holder,   int position,  PetrolPumpItem item)
     {
-        if(item.rest_room==null)
-        {
-            holder.restroom.setEnabled(false);
-            holder.linearLayout.removeView(holder.restroom);
-        }
-        if(item.water==null)
-        {
-            holder.water.setEnabled(false);
-            holder.linearLayout.removeView( holder.water);
-        }
-        if(item.toilets==null)
-        {
-            holder.toilet.setEnabled(false);
+        if(item!=null) {
+            if (item.rest_room == null) {
+                holder.restroom.setText("AVAILABLE");
+            }
 
-            holder.linearLayout.removeView( holder.toilet);
+
+            if (item.water == null) {
+                holder.water.setText("AVAILABLE");
+            }
+
+            if (item.toilets == null) {
+
+                holder.toilet.setText("AVAILABLE");
+            }
+
+            if (true) {
+                //  holder.shop.setEnabled(false);
+
+                // holder.linearLayout.removeView( holder.shop);
+            }
+            if (item.card_accepted == null) {
+
+                holder.card_pay.setText("AVAILABLE");
+            }
+
+            if (item.air == null) {
+
+                holder.air.setText("AVAILABLE");
+            }
+
+            if (item.atm == null || (item.atm.compareTo("0") == 0)) {
+
+                holder.atm.setText("AVAILABLE");
+            }
+            if (item.first_aid == null) {
+
+                holder.first_aid.setText("AVAILABLE");
+            }
+            if (item.petrol == null) {
+
+                holder.petrol.setText("AVAILABLE");
+            }
+            if (item.disel == null) {
+
+                holder.disel.setText("AVAILABLE");
+            }
         }
-        if(true)
+        else
         {
-            //  holder.shop.setEnabled(false);
-
-            // holder.linearLayout.removeView( holder.shop);
-        }
-        if(item.card_accepted==null)
-        {
-            //  holder.card_pay.setEnabled(false);
-            holder.linearLayout.removeView( holder.card_pay);
-        }
-
-        if(item.air==null)
-        {
-            holder.air.setEnabled(false);
-
-            holder.linearLayout.removeView( holder.air);
-        }
-
-        if (item.atm == null || (item.atm.compareTo("0") == 0))
-        {
-            holder.atm.setEnabled(false);
-
-            holder.linearLayout.removeView( holder.atm);
-        }
-        if(item.first_aid==null)
-        {
-            holder.first_aid.setEnabled(false);
-
-            holder.linearLayout.removeView( holder.first_aid);
-        }
-        if(item.petrol==null)
-        {
-            holder.petrol.setEnabled(false);
-
-            holder.linearLayout.removeView( holder.petrol);
-        }
-        if(item.disel==null)
-        {
-            holder.disel.setEnabled(false);
-
-            holder.linearLayout.removeView( holder.disel);
+            Log.e("","item is null");
         }
     }
 
@@ -156,7 +224,7 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
 
         LinearLayout linearLayout;
         
-        ImageView restroom,water,toilet,shop,card_pay,air,atm,first_aid,petrol,disel;
+        TextView restroom,water,toilet,shop,card_pay,air,atm,first_aid,petrol,disel;
 
         public ViewHolder(View view) {
             super(view);
@@ -173,19 +241,26 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
 
         }
 
+        public void addItem(PetrolPumpItem item) {
+            mValues.add(item);
+            notifyDataSetChanged();
+        }
+
         void getAllFacButton(View view)
         {
-            restroom=(ImageView)view.findViewById(R.id.rest_room);
-            water=(ImageView)view.findViewById(R.id.water);
-            toilet=(ImageView)view.findViewById(R.id.toilet);
-            shop=(ImageView)view.findViewById(R.id.shop);
-            card_pay=(ImageView)view.findViewById(R.id.card_pay);
-            air=(ImageView)view.findViewById(R.id.air);
-            atm=(ImageView)view.findViewById(R.id.atm);
-            first_aid=(ImageView)view.findViewById(R.id.first_aid);
-            petrol=(ImageView)view.findViewById(R.id.petrol);
-            disel=(ImageView)view.findViewById(R.id.diesel);
+            /*
+            restroom=(TextView)view.findViewById(R.id.rest_room);
+            water=(TextView)view.findViewById(R.id.water);
+            toilet=(TextView)view.findViewById(R.id.toilet);
+            shop=(TextView)view.findViewById(R.id.shop);
+            card_pay=(TextView)view.findViewById(R.id.card_pay);
+            air=(TextView)view.findViewById(R.id.air);
+            atm=(TextView)view.findViewById(R.id.atm);
+            first_aid=(TextView)view.findViewById(R.id.first_aid);
+            petrol=(TextView)view.findViewById(R.id.petrol);
+            disel=(TextView)view.findViewById(R.id.diesel);
             linearLayout=(LinearLayout) view.findViewById(R.id.linearLayoutFront);
+            */
         }
 
         @Override
@@ -193,5 +268,13 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
             return super.toString() + " '" + mContentView.getText() + "'";
         }
 
+    }
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar1);
+        }
     }
 }

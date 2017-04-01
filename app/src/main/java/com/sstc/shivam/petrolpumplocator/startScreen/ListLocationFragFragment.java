@@ -138,29 +138,6 @@ public class ListLocationFragFragment extends Fragment {
 
     Location location;
 
-    public void  getLocationFromGps()
-    {
-        gps = new GPSTracker(getActivity());
-
-        // check if GPS enabled
-        if (gps.canGetLocation()) {
-
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-
-            // \n is for new line
-            Toast.makeText(getActivity().getApplicationContext(), "Your Location is - \nLat: "
-                    + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-
-            location=gps.getLocation();
-            showList(location);
-
-        } else {
-
-            gps.showSettingsAlert();
-        }
-    }
-
 
     @Override
     public void onDetach() {
@@ -170,7 +147,6 @@ public class ListLocationFragFragment extends Fragment {
 
     void showList(Location location) {
         GetAllLocation gAL = new GetAllLocation();
-
         gAL.setlistLocationFrag(this);
         gAL.execute(location, 0, 15);
     }

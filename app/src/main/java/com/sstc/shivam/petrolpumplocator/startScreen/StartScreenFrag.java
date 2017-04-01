@@ -82,7 +82,6 @@ public class StartScreenFrag extends Fragment {
 
     Button locationBtn;
 
-    ImageButton mapBtn;
 
     SearchView searchBarBtn;
 
@@ -137,7 +136,6 @@ public class StartScreenFrag extends Fragment {
 
         locationBtn=(Button)view.findViewById(R.id.locationBtn);
 
-        mapBtn=(ImageButton)view.findViewById(R.id.mapBtn);
 
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -151,12 +149,6 @@ public class StartScreenFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.onLocationButtonPressed();
-            }
-        });
-        mapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onMapButtonPressed();
             }
         });
 

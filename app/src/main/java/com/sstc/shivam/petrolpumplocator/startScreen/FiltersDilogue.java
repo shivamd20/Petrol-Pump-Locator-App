@@ -1,4 +1,4 @@
-package com.sstc.shivam.petrolpumplocator.offline;
+package com.sstc.shivam.petrolpumplocator.startScreen;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,15 +11,15 @@ import com.sstc.shivam.petrolpumplocator.offline.database.GetDataFromSQLite;
 import java.util.ArrayList;
 
 
-public class DownloadMapDilogue extends DialogFragment {
+public class FiltersDilogue extends DialogFragment {
     ArrayList mSelectedItems = new ArrayList();
-    onDownloadOffllineMapsLisner mLisner;
+    onFilterSelectionListner mLisner;
 
     ArrayList<String> listStates;
 
-    public static DownloadMapDilogue getInstance(ArrayList<String> listStates, onDownloadOffllineMapsLisner ml)
+    public static FiltersDilogue getInstance(ArrayList<String> listStates, onFilterSelectionListner ml)
     {
-        DownloadMapDilogue f=new DownloadMapDilogue();
+        FiltersDilogue f=new FiltersDilogue();
         f.listStates=listStates;
         f.mLisner=ml;
         return f;
@@ -30,6 +30,7 @@ public class DownloadMapDilogue extends DialogFragment {
 
         ArrayList<String> tempdb = new GetDataFromSQLite(getActivity())
                 .getAllStateList();
+
         boolean[] checkedItems = new boolean[listStates.size()];
 
         new GetDataFromSQLite(getActivity()).deleteOfflineMap();
@@ -61,15 +62,15 @@ public class DownloadMapDilogue extends DialogFragment {
 
                         ArrayList<String>  list=new ArrayList<String>();
 
-                        GetDataFromSQLite dataFromSQLite = new GetDataFromSQLite(DownloadMapDilogue.this.getActivity());
-                      //  dataFromSQLite.deleteOfflineMap();
+                        GetDataFromSQLite dataFromSQLite = new GetDataFromSQLite(FiltersDilogue.this.getActivity());
+                        dataFromSQLite.deleteOfflineMap();
 
                         for(Object X:mSelectedItems)
                         {
                             Integer a=(Integer) X;
                             list.add(listStates.get(a.intValue()));
                         }
-                            mLisner.onDownloadOffllineMapsokAction(list);
+                            mLisner.onFilterSelection(list);
 
                     }
                 })
@@ -98,7 +99,7 @@ public class DownloadMapDilogue extends DialogFragment {
         return tenp;
     }
 
-    public interface onDownloadOffllineMapsLisner{
+    public interface onFilterSelectionListner {
 
-        void onDownloadOffllineMapsokAction(ArrayList<String> args);
+        void onFilterSelection(ArrayList<String> args);
     }}

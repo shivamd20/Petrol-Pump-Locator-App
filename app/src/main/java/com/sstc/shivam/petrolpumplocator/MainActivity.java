@@ -22,10 +22,15 @@ import android.widget.Toast;
 import com.sstc.shivam.petrolpumplocator.detailsScreen.PetrolPumpDetailsActivity;
 import com.sstc.shivam.petrolpumplocator.offline.ListLocationFragFragmentOffline;
 import com.sstc.shivam.petrolpumplocator.offline.OfflineFrag;
+import com.sstc.shivam.petrolpumplocator.offline.database.GetAllLocationAsyncTask;
+import com.sstc.shivam.petrolpumplocator.offline.database.OfflineLocationDownloadTask;
 import com.sstc.shivam.petrolpumplocator.offline.database.PrefSingleton;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment;
 import com.sstc.shivam.petrolpumplocator.startScreen.StartScreenFrag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ListLocationFragFragment.OnListFragmentInteractionListener, ListLocationFragFragmentOffline.OnListFragmentOfflineInteractionListener
 ,OfflineFrag.OnFragmentInteractionListener,StartScreenFrag.OnStartFragIntersectionLisner{
@@ -43,7 +48,11 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
     private String[] mPlanetTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+
+    public  final List<PetrolPumpItem> ITEMS = new ArrayList<PetrolPumpItem>();
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -330,6 +339,7 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
 
         return checkForPermission();
     }
+
 
 }
 

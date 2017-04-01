@@ -10,13 +10,22 @@ import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.offline.ListLocationFragFragmentOffline;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
+import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
 
 
 public class GetAllLocationAsyncTask extends AsyncTask<Object, Integer, Boolean> {
 
     ProgressDialog progressDialog;
     Context mContext;
-    Location latLng;
+  public static   Location latLng;
+
+    int start;
+    int end ;
+
+   public static  int velocity=30;
 
     public GetAllLocationAsyncTask(Context context) {
         super();
@@ -27,24 +36,43 @@ public class GetAllLocationAsyncTask extends AsyncTask<Object, Integer, Boolean>
     protected Boolean doInBackground(Object... args) {
 
         latLng = (Location) args[0];
+
+
         int start = (int) args[1];
+        this.start=start;
         int end = (int) args[2];
 
         GetDataFromSQLite gd = new GetDataFromSQLite(mContext);
 
         Cursor cur = gd.getLocations(latLng,start,end);
 
+        this.end=cur.getCount();
+
         while (cur.moveToNext()) {
 
             PetrolPumpItem item = rowToObject(cur);
 
-            item.distance=GetDataFromSQLite.CaloculateDistance.distance(latLng.getLatitude(),
-                    latLng.getLongitude(),Double.parseDouble(item.latitude),Double.parseDouble(item.longitude),'K')+"";
+            try {
+
+                item.distance = Math.round(new DecimalFormat("#0.00").parse(GetDataFromSQLite.CaloculateDistance.distance(latLng.getLatitude(),
+                        latLng.getLongitude(), Double.parseDouble(item.latitude), Float.parseFloat(item.longitude), 'K') + "").intValue()) + "";
+
+                item.duration=" | "+Math.round(Float.parseFloat(item.distance)/velocity)+" hours";
+
+                item.distance=item.distance+"km";
+
+            }catch (ParseException pe)
+            {
+                item.distance="not available";
+            }
 
             GetDataFromSQLite.ITEMS.add(item);
         }
         return true;
     }
+
+
+
 
   public static  PetrolPumpItem rowToObject(Cursor cur) {
         PetrolPumpItem item = new PetrolPumpItem();
@@ -121,14 +149,12 @@ public class GetAllLocationAsyncTask extends AsyncTask<Object, Integer, Boolean>
     @Override
     protected void onPostExecute(Boolean result) {
 
-        for(PetrolPumpItem X:GetDataFromSQLite.ITEMS)
-        {
-            Log.i("lat long db",""+X.latitude+X.longitude+X.pname);
-        }
 
-        ListLocationFragFragmentOffline.listLocationFragRecyclerOfflineViewAdapter.notifyDataSetChanged();
+
+        ListLocationFragFragmentOffline.listLocationFragRecyclerOfflineViewAdapter.setLocation(latLng);
+
+        ListLocationFragFragmentOffline.listLocationFragRecyclerOfflineViewAdapter.notifyItemInserted(start);
         progressDialog.dismiss();
 
-        Toast.makeText(mContext, "" + GetDataFromSQLite.ITEMS.size(), Toast.LENGTH_SHORT).show();
     }
 }

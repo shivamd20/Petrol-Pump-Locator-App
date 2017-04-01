@@ -16,7 +16,7 @@ public class Contract {
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
         public static final String OWNER_ID = "owner_id";
-        public static final String CONTACT_NO = "CONTACT_NO";
+        public static final String CONTACT_NO = "contact_no";
         public static final String ADDRESS = "address";
         public static final String OPENING_TIME = "opening_time";
         public static final String CLOSING_TIME = "closing_time";
@@ -42,6 +42,8 @@ public class Contract {
         public static final String ATM = "atm";
         public static final String STATE = "state";
     }
+
+
 
     public static class PetrolPumpDetail_FTS implements BaseColumns{
 

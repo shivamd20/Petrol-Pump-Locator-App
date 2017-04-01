@@ -1,5 +1,6 @@
 package com.sstc.shivam.petrolpumplocator.offline.database;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -95,10 +96,15 @@ public class GetAllStateNamesFromServer extends AsyncTask<String,Integer,ArrayLi
 @Override
     protected void onPostExecute(ArrayList<String> result) {
     progressDialog.dismiss();
+    if(result.size()!=0) {
+        DownloadMapDilogue downloadMapDilogue = DownloadMapDilogue.getInstance(result, mContext);
+        downloadMapDilogue.show(mContext.getChildFragmentManager(), "Download Map");
+    }
+    else
+    {
+        new AlertDialog.Builder(mContext.getActivity()).setMessage("There might be some problem in your network connectivity").setTitle("ERROR OCCURRED").show();
 
-    DownloadMapDilogue downloadMapDilogue=DownloadMapDilogue.getInstance(result,mContext);
-    downloadMapDilogue.show(mContext.getChildFragmentManager(),"Download Map");
-
+    }
 
     }
     @Override
