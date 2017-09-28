@@ -1,7 +1,5 @@
 package com.sstc.shivam.petrolpumplocator.offline;
 
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.location.Location;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.R;
-import com.sstc.shivam.petrolpumplocator.offline.database.GetAllLocationAsyncTask;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 import com.sstc.shivam.petrolpumplocator.startScreen.ListLocationFragFragment.OnListFragmentInteractionListener;
 
@@ -74,8 +69,6 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
                                     && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                                 // End has been reached
                                 // Do something
-                                    listener.onLoadMore(location,mValues.size(),5);
-
                                 loading = true;
                             }
                         }
@@ -88,9 +81,6 @@ public class MyListLocationFragRecyclerViewOfflineAdapter extends RecyclerView.A
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_listlocationfrag, parent, false);
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(

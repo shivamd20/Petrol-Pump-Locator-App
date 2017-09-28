@@ -1,8 +1,10 @@
 package com.sstc.shivam.petrolpumplocator.detailsScreen;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 
 import com.sstc.shivam.petrolpumplocator.GPSTracker;
 import com.sstc.shivam.petrolpumplocator.R;
+import com.sstc.shivam.petrolpumplocator.offline.database.Contract;
+import com.sstc.shivam.petrolpumplocator.offline.database.DBHelper;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
 
 import org.osmdroid.api.IMapController;
@@ -85,9 +89,19 @@ public class PetrolPumpDetailsActivity extends Activity {
         item=(PetrolPumpItem) getIntent().getSerializableExtra(PetrolPumpItem.EXTRASTRING);
         if(item==null)
         {
-           // System.exit(0);
             throw new NullPointerException();
         }
+
+
+        DBHelper dbHelper=new DBHelper(this);
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+
+        ContentValues values=new ContentValues();
+
+        values.put(Contract.USER_HISTORY.PID,item.pid);
+        values.put(Contract.USER_HISTORY.ADDRESS,item.address);
+        values.put(Contract.USER_HISTORY.PNAME,item.pname);
+        db.insert(Contract.USER_HISTORY.TABLE_NAME,null,values);
 
         final GestureDetector gestureDetector = new GestureDetector(new MyGestureDetector(this.getParent()));
         //the parent layout

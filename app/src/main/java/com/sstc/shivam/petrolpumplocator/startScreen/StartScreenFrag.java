@@ -3,9 +3,11 @@ package com.sstc.shivam.petrolpumplocator.startScreen;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.sstc.shivam.petrolpumplocator.R;
 import com.sstc.shivam.petrolpumplocator.detailsScreen.PetrolPumpDetailsActivity;
 import com.sstc.shivam.petrolpumplocator.offline.database.Contract;
+import com.sstc.shivam.petrolpumplocator.offline.database.DBHelper;
 import com.sstc.shivam.petrolpumplocator.offline.database.GetAllLocationAsyncTask;
 import com.sstc.shivam.petrolpumplocator.offline.database.GetDataFromSQLite;
 import com.sstc.shivam.petrolpumplocator.petrolPumpDetails.PetrolPumpItem;
@@ -124,6 +127,15 @@ public class StartScreenFrag extends Fragment {
                 from,
                 to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        DBHelper dbHelper=new DBHelper(this.getActivity());
+
+        Cursor cur= dbHelper.getWritableDatabase().query(Contract.USER_HISTORY.TABLE_NAME,null,null,null,null,null,null);
+        while(cur.moveToNext())
+        {
+            Log.i("user history",cur.getString((cur.getColumnIndex(Contract.USER_HISTORY.PNAME))));
+        }
+
     }
 
     @Override
@@ -222,6 +234,8 @@ public class StartScreenFrag extends Fragment {
         if (mListener != null) {
         }
     }
+
+
 
     @Override
     public void onDetach() {

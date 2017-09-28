@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 import com.sstc.shivam.petrolpumplocator.detailsScreen.PetrolPumpDetailsActivity;
 import com.sstc.shivam.petrolpumplocator.offline.ListLocationFragFragmentOffline;
 import com.sstc.shivam.petrolpumplocator.offline.OfflineFrag;
+import com.sstc.shivam.petrolpumplocator.offline.database.Contract;
+import com.sstc.shivam.petrolpumplocator.offline.database.DBHelper;
 import com.sstc.shivam.petrolpumplocator.offline.database.GetAllLocationAsyncTask;
 import com.sstc.shivam.petrolpumplocator.offline.database.OfflineLocationDownloadTask;
 import com.sstc.shivam.petrolpumplocator.offline.database.PrefSingleton;
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         mA = this;
         PrefSingleton.getInstance().Initialize(getApplicationContext());
 
@@ -138,13 +142,12 @@ public class MainActivity extends AppCompatActivity implements ListLocationFragF
 
 
 
+
         // Set the adapter for the list view
         // Set the list's click listener
       //  mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     }
-
-
 
     @Override
     public void onListFragmentInteraction(PetrolPumpItem item) {

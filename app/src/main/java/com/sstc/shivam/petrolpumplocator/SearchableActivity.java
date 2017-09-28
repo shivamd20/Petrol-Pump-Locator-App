@@ -19,14 +19,13 @@ public class SearchableActivity extends ListActivity {
 Cursor mCursor;
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            finish();
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_searchable);
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();
 
-            String query="vcbjkvhjbvcjbhcvbjcvhbvcjbhcbkcjhbc";
+            String query="";
 
             Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
             if (appData != null) {

@@ -51,6 +51,15 @@ public class DBHelper extends SQLiteOpenHelper {
             "  " + PetrolPumpDetail.STATE + " varchar(45) ," +
             "  PRIMARY KEY (" + PetrolPumpDetail.PID + "))";
 
+
+    final String SQL_CREATE_USER_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS " + Contract.USER_HISTORY.TABLE_NAME + " (" +
+
+            "  " + Contract.USER_HISTORY.PID + " TEXT NOT NULL ," +
+            "  " + Contract.USER_HISTORY.PNAME + " TEXT NOT NULL," +
+            "  " + Contract.USER_HISTORY.ADDRESS+ " TEXT DEFAULT 'not available'," +
+            "  " + Contract.USER_HISTORY.TIME+ " DATETIME DEFAULT CURRENT_TIMESTAMP ," +
+            "  PRIMARY KEY (" + Contract.USER_HISTORY.TIME + "))";
+
     final String SQL_CREATE_FTS_ENTRIES =
             "CREATE VIRTUAL TABLE "
                     +Contract.PetrolPumpDetail_FTS.TABLE_NAME +" USING fts4 " +
@@ -72,6 +81,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
         db.execSQL(SQL_CREATE_FTS_ENTRIES);
+        db.execSQL(SQL_CREATE_USER_HISTORY_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

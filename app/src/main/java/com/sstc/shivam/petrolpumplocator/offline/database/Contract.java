@@ -49,8 +49,15 @@ public class Contract {
 
         public static final String TABLE_NAME = "petrol_pump_details_fts";
         public static final String CONTENT = "content";
-
         public static final String DOCID = "docid";
+    }
+    public static class USER_HISTORY implements BaseColumns{
 
+        public static final String TABLE_NAME = "user_history";
+        public static final String PID = "pid";
+        public static final String PNAME = "pname";
+
+        public static final String ADDRESS = "address";
+        public static final String TIME = "time";
     }
 }
